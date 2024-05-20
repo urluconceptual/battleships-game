@@ -1,5 +1,31 @@
 import React, { createContext, useContext, useState } from "react";
-import { getUserDetails, login, register } from "../api";
+import {
+  createGame,
+  getAllGames,
+  getUserDetails,
+  login,
+  register,
+} from "../api";
+
+export type Game = {
+  id: string;
+  status: string;
+  player1: Player;
+  player1Id: string;
+  player2: Player;
+  player2Id: string;
+  playerToMoveId: string;
+};
+
+export type GamesData = {
+  total: number;
+  games: Game[];
+};
+
+export type Player = {
+  email: string;
+  id: string;
+};
 
 interface IAuthContext {
   token: string;
@@ -8,14 +34,14 @@ interface IAuthContext {
     gamesLost: number;
     gamesPlayed: number;
     gamesWon: number;
-    user: {
-      email: string;
-      id: string;
-    };
+    user: Player;
   };
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   getUserDetails: () => Promise<void>;
+  getGames: () => Promise<void>;
+  games: GamesData | null;
+  createGame: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext>({
@@ -33,7 +59,28 @@ const AuthContext = createContext<IAuthContext>({
   login: async () => {},
   register: async () => {},
   getUserDetails: async () => {},
+  getGames: async () => {},
+  games: null,
+  createGame: async () => {},
 });
+
+function extractShape(obj) {
+  const shape = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key];
+      if (value === null) {
+        shape[key] = "null";
+      } else if (Array.isArray(value)) {
+        shape[key] =
+          value.length > 0 ? "array of " + typeof value[0] : "empty array";
+      } else {
+        shape[key] = typeof value;
+      }
+    }
+  }
+  return shape;
+}
 
 export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -58,6 +105,16 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       id: "",
     },
   });
+  const [games, setGames] = useState();
+
+  const handleGetAllGames = async () => {
+    try {
+      const res = await getAllGames(token);
+      setGames(res);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   const handleLogin = async (email: string, password: string) => {
     if (!email || !password) {
@@ -71,6 +128,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
       alert(error.message);
     }
   };
+
   const handleRegister = async (email: string, password: string) => {
     if (!email || !password) {
       alert("Please enter email and password");
@@ -94,6 +152,15 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const handleCreateGame = async () => {
+    try {
+      const result = await createGame(token);
+      alert("Game created! Game ID: " + result.id);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -102,6 +169,9 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
         register: handleRegister,
         userDetails,
         getUserDetails: handleGetUserDetails,
+        games,
+        getGames: handleGetAllGames,
+        createGame: handleCreateGame,
       }}
     >
       {children}

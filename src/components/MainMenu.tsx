@@ -28,13 +28,17 @@ const Button = styled.TouchableOpacity`
 
 export interface IMainMenu {
   goToUserDetails: () => void;
+  goToLobby: () => void;
 }
 
-const MainMenu: React.FC<IMainMenu> = ({ goToUserDetails }) => {
+const MainMenu: React.FC<IMainMenu> = ({ goToUserDetails, goToLobby }) => {
   return (
     <Container>
       <Button onPress={goToUserDetails}>
         <StyledText>My profile</StyledText>
+      </Button>
+      <Button onPress={goToLobby}>
+        <StyledText>Lobby</StyledText>
       </Button>
     </Container>
   );
