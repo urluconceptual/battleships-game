@@ -7,8 +7,16 @@ const MainMenuScreen = () => {
   const handleGoToUserDetails = () => {
     navigation.navigate(GameRouteNames.USER_DETAILS);
   };
+  const handleGoToLobby = () => {
+    navigation.navigate(GameRouteNames.LOBBY);
+  };
 
-  return <MainMenu goToUserDetails={handleGoToUserDetails} />;
+  return (
+    <MainMenu
+      goToUserDetails={handleGoToUserDetails}
+      goToLobby={handleGoToLobby}
+    />
+  );
 };
 
 export default MainMenuScreen;
