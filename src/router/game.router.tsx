@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import LobbyScreen from "../screens/game/Lobby.screen";
 import MainMenuScreen from "../screens/game/MainMenu.screen";
+import TableScreen from "../screens/game/Table.screen";
 import UserDetailsScreen from "../screens/game/UserDetails.screen";
 import { GameRouteNames } from "./route-names";
 
@@ -33,6 +34,13 @@ const gameRoutes = (
       component={LobbyScreen}
       options={{
         headerTitle: (props) => <StyledText {...props}>Lobby</StyledText>,
+      }}
+    />
+    <GameStack.Screen
+      name={GameRouteNames.TABLE}
+      component={TableScreen}
+      options={{
+        headerTitle: (props) => <StyledText {...props}>Game Table</StyledText>,
       }}
     />
   </GameStack.Navigator>

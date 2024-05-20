@@ -35,6 +35,8 @@ const SimpleText = styled.Text`
   margin: 10px;
 `;
 
+const ButtonText = styled.Text``;
+
 const Title = styled.Text`
   font-family: "RobotoMono-Regular";
   font-size: 24px;
@@ -53,9 +55,10 @@ const Button = styled.TouchableOpacity`
 export interface ILobby {
   games: GamesData;
   createGame: () => void;
+  joinGame: (gameId: string) => void;
 }
 
-const Lobby: React.FC<ILobby> = ({ games, createGame }) => {
+const Lobby: React.FC<ILobby> = ({ games, createGame, joinGame }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredGames = games?.games.filter(
@@ -92,8 +95,8 @@ const Lobby: React.FC<ILobby> = ({ games, createGame }) => {
             <SimpleText>Player to move: {game.playerToMoveId}</SimpleText>
             <SimpleText>Player 1: {game.player1?.email}</SimpleText>
             <SimpleText>Player 2: {game.player2?.email}</SimpleText>
-            <Button>
-              <StyledText>Join game</StyledText>
+            <Button onPress={() => joinGame(game.id)}>
+              <ButtonText>Join game</ButtonText>
             </Button>
           </Card>
         );

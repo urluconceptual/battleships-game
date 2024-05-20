@@ -105,6 +105,7 @@ export const createGame = async (token: string) => {
 };
 
 export const joinGame = async (token: string, gameId: string) => {
+  console.log("Joining game", token, gameId);
   const result = await fetch(`${baseUrl}/game/join/${gameId}`, {
     method: "POST",
     headers: {
@@ -113,7 +114,30 @@ export const joinGame = async (token: string, gameId: string) => {
     },
   });
 
-  if (result.status !== 200) {
-    throw new Error("Could not join game.");
+  const data = await result.json();
+
+  if (data.code !== 200) {
+    throw new Error(data.message);
+  }
+};
+
+export const sendConfiguration = async (
+  token: string,
+  gameId: string,
+  configuration: any
+) => {
+  const result = await fetch(`${baseUrl}/game/${gameId}`, {
+    method: "PATCH",
+    headers: {
+      ...baseHeaders,
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(configuration),
+  });
+
+  const data = await result.json();
+
+  if (data.code !== 200) {
+    throw new Error(data.message);
   }
 };

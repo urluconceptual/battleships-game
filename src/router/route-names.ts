@@ -7,4 +7,5 @@ export const enum GameRouteNames {
   MAIN_MENU = "MAIN_MENU",
   USER_DETAILS = "USER_DETAILS",
   LOBBY = "LOBBY",
+  TABLE = "TABLE",
 }
